@@ -41,3 +41,17 @@ Next steps:
 Unit tests collect coverage via Jest. Running `npm test` in the `api/` folder will generate a `coverage/` directory with the report.
 
 CI uploads coverage reports to Codecov (when `CODECOV_TOKEN` is configured in repository secrets) and also stores the coverage artifact on workflow runs.
+
+## Triggering CI via GitHub CLI
+
+You can manually trigger the CI workflow (or rerun it) from your terminal using the `gh` CLI. Example:
+
+```bash
+# Trigger the default CI workflow (runs api tests and integration job)
+gh workflow run ci.yml
+
+# Or monitor recent workflow runs
+gh run list --workflow=ci.yml
+```
+
+The CI includes an `Integration Tests (stub)` job that runs lightweight HTTP-based routing integration tests (useful before adding a full OSRM/GraphHopper job).

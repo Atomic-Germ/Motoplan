@@ -72,3 +72,67 @@ jobs:
           flags: api
           fail_ci_if_error: false
           token: ${{ secrets.CODECOV_TOKEN }}
+
+  integration-tests:
+    name: Integration Tests (stub)
+    runs-on: ubuntu-latest
+    needs: api-tests
+    services:
+      postgres:
+        image: postgis/postgis:15-3.3
+        env:
+          POSTGRES_USER: planner
+          POSTGRES_PASSWORD: planner_password
+          POSTGRES_DB: planner_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U planner"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache node modules (api)
+        uses: actions/cache@v4
+        with:
+          path: api/node_modules
+          key: ${{ runner.os }}-node-api-${{ hashFiles('api/**/package-lock.json', 'api/**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-api-
+
+      - name: Install dependencies (api)
+        run: npm ci --prefix api
+
+      - name: Run integration tests (api)
+        env:
+          PG_HOST: 127.0.0.1
+          PG_PORT: 5432
+          PG_USER: planner
+          PG_PASSWORD: planner_password
+          PG_DATABASE: planner_db
+        run: npm run test:integration --prefix api -- --colors
+
+      - name: Upload integration coverage artifact (api)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-integration-coverage-report
+          path: api/coverage
+
+      - name: Upload integration coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@v4
+        with:
+          files: api/coverage/**/lcov.info
+          flags: api-integration
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}

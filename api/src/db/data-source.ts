@@ -1,5 +1,8 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
+import { POI } from '../entities/poi.entity';
+import { RoadSegment } from '../entities/road-segment.entity';
+import { ElevationPoint } from '../entities/elevation-point.entity';
 
 declare const process: any;
 
@@ -18,6 +21,6 @@ export const AppDataSource = new DataSource({
   database: dbName,
   synchronize: false,
   logging: false,
-  entities: [],
+  entities: [POI, RoadSegment, ElevationPoint],
   migrations: []
 });

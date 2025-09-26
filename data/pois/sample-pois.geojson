@@ -1,0 +1,15 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Scenic Overlook", "description": "Great view of the coastline." },
+      "geometry": { "type": "Point", "coordinates": [ -122.4194, 37.7749 ] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Gas Station", "description": "24/7 fuel and snacks." },
+      "geometry": { "type": "Point", "coordinates": [ -121.8947, 36.6002 ] }
+    }
+  ]
+}

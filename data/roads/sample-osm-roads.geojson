@@ -1,0 +1,15 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "highway": "track", "surface": "dirt", "name": "Old Forest Track" },
+      "geometry": { "type": "LineString", "coordinates": [[-121.895,36.6],[-121.896,36.601]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "highway": "primary", "surface": "asphalt", "name": "County Road" },
+      "geometry": { "type": "LineString", "coordinates": [[-122.42,37.775],[-122.43,37.78]] }
+    }
+  ]
+}

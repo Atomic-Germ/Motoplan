@@ -29,4 +29,19 @@ describe('PlannerService options', () => {
     expect(plan.id).toBe('mock-route-scenic');
     expect(plan.distance_km).toBeGreaterThanOrEqual(60);
   });
+
+  test('twistiness option produces twisty route', async () => {
+    const adapter = new MockRoutingAdapter();
+    const service = new PlannerService(adapter);
+
+    const origin = { lat: 37.7749, lon: -122.4194 };
+    const destination = { lat: 36.6002, lon: -121.8947 };
+
+    const plan = await service.createPlan(origin, destination, { twistiness: 0.8 });
+
+    expect(plan).toBeDefined();
+    expect(plan.id).toMatch(/^mock-route-twisty-/);
+    expect(plan.twistiness_score).toBeCloseTo(0.8, 1);
+    expect(plan.waypoints.length).toBeGreaterThanOrEqual(3);
+  });
 });

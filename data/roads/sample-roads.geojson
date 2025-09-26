@@ -1,0 +1,27 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "surface": "asphalt", "name": "Main Highway" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [ -122.4200, 37.7750 ],
+          [ -122.4300, 37.7800 ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "surface": "gravel", "name": "Forest Trail", "difficulty": 3 },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [ -121.8950, 36.6000 ],
+          [ -121.9000, 36.6050 ]
+        ]
+      }
+    }
+  ]
+}

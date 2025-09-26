@@ -1,10 +1,12 @@
 import { Router } from 'express';
+import { PlannerService } from '../services/planner-service';
+import { MockRoutingAdapter } from '../routing/mock-adapter';
+import { validatePlanRequest } from '../validators/plan-validator';
 
 const router = Router();
 
-// Sample /api/plans endpoint that returns a mock trip plan
+// GET returns a simple sample plan for quick checks
 router.get('/', async (req: any, res: any) => {
-  // In later tasks, this will call the routing adapter and DB to produce a plan.
   const sample = {
     id: 'sample-1',
     name: 'Coastal Curves Loop',
@@ -18,6 +20,32 @@ router.get('/', async (req: any, res: any) => {
   };
 
   res.json({ plan: sample });
+});
+
+// POST accepts { origin, destination, options } and returns a generated plan
+router.post('/', async (req: any, res: any) => {
+  const { origin, destination, options } = req.body || {};
+
+  if (!origin || !destination) {
+    return res.status(400).json({ error: 'origin and destination are required' });
+  }
+
+  // Use mock adapter by default for now — swap with HttpRoutingAdapter in production
+  const adapter = new MockRoutingAdapter();
+  const service = new PlannerService(adapter);
+
+  try {
+    const errors = validatePlanRequest(req.body);
+    if (errors.length > 0) {
+      return res.status(400).json({ errors });
+    }
+
+    const plan = await service.createPlan(origin, destination, options);
+    return res.json({ plan });
+  } catch (err: any) {
+    console.error('Error creating plan', err);
+    return res.status(500).json({ error: 'failed to create plan' });
+  }
 });
 
 export default router;
