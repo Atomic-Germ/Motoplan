@@ -1,24 +1,33 @@
 /// <reference types="jest" />
-import { validatePlanRequest } from '../validators/plan-validator';
+import { parsePlanRequest } from '../validators/plan-schema';
 
 describe('plan request validation', () => {
   test('rejects missing body', () => {
-    const errs = validatePlanRequest(undefined as any);
-    expect(errs).toContain('request body is required');
+    const res = parsePlanRequest(undefined as any);
+    expect(res.success).toBe(false);
+    if (!res.success) {
+      expect(res.errors.length).toBeGreaterThan(0);
+    }
   });
 
   test('rejects invalid origin/destination', () => {
-    const errs = validatePlanRequest({ origin: { lat: 999, lon: 0 }, destination: { lat: 0, lon: 0 } });
-    expect(errs.some((e) => e.includes('origin'))).toBeTruthy();
+    const res = parsePlanRequest({ origin: { lat: 999, lon: 0 }, destination: { lat: 0, lon: 0 } });
+    expect(res.success).toBe(false);
+    if (!res.success) {
+      expect(res.errors.some((e: string) => e.includes('origin'))).toBeTruthy();
+    }
   });
 
   test('rejects invalid twistiness', () => {
-    const errs = validatePlanRequest({ origin: { lat: 0, lon: 0 }, destination: { lat: 1, lon: 1 }, options: { twistiness: 3 } });
-    expect(errs).toContain('twistiness must be between 0 and 1');
+    const res = parsePlanRequest({ origin: { lat: 0, lon: 0 }, destination: { lat: 1, lon: 1 }, options: { twistiness: 3 } });
+    expect(res.success).toBe(false);
+    if (!res.success) {
+      expect(res.errors.some((e: string) => e.includes('twistiness'))).toBeTruthy();
+    }
   });
 
   test('accepts valid request', () => {
-    const errs = validatePlanRequest({ origin: { lat: 0, lon: 0 }, destination: { lat: 1, lon: 1 }, options: { twistiness: 0.5, scenic: true } });
-    expect(errs.length).toBe(0);
+    const res = parsePlanRequest({ origin: { lat: 0, lon: 0 }, destination: { lat: 1, lon: 1 }, options: { twistiness: 0.5, scenic: true } });
+    expect(res.success).toBe(true);
   });
 });

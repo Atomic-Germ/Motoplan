@@ -12,7 +12,7 @@ describe('PlannerService (TDD)', () => {
     const destination = { lat: 36.6002, lon: -121.8947 };
 
     // Act
-    const plan = await service.createPlan(origin, destination, { avoid_unpaved: true });
+    const plan = await service.createPlan(origin, destination);
 
     // Assert
     expect(plan).toBeDefined();

@@ -8,7 +8,7 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
     "lint": "eslint 'src/**/*.ts' --fix",
-    "test": "jest --coverage --passWithNoTests",
+    "test": "jest --config jest.config.js --coverage --passWithNoTests",
     "test:watch": "jest --watch",
     "test:integration": "jest --testPathPattern=http.integration.test.ts --runInBand",
     "ingest:pois": "ts-node src/ingest/ingest-pois.ts",
@@ -20,7 +20,8 @@
     "dotenv": "^16.3.1",
     "pg": "^8.11.0",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.3.16"
+    "typeorm": "^0.3.16",
+    "zod": "^3.22.2"
   },
   "devDependencies": {
     "typescript": "^5.5.6",
