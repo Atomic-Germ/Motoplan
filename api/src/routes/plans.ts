@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { PlannerService } from '../services/planner-service';
 import { MockRoutingAdapter } from '../routing/mock-adapter';
-import { validatePlanRequest } from '../validators/plan-validator';
+import { parsePlanRequest, planRequestSchema } from '../validators/plan-schema';
+import { validateBody } from '../validators/express-middleware';
 
 const router = Router();
 
@@ -23,24 +24,15 @@ router.get('/', async (req: any, res: any) => {
 });
 
 // POST accepts { origin, destination, options } and returns a generated plan
-router.post('/', async (req: any, res: any) => {
-  const { origin, destination, options } = req.body || {};
-
-  if (!origin || !destination) {
-    return res.status(400).json({ error: 'origin and destination are required' });
-  }
+router.post('/', validateBody(planRequestSchema), async (req: any, res: any) => {
+  const { origin, destination, options } = req.body;
 
   // Use mock adapter by default for now — swap with HttpRoutingAdapter in production
   const adapter = new MockRoutingAdapter();
   const service = new PlannerService(adapter);
 
   try {
-    const errors = validatePlanRequest(req.body);
-    if (errors.length > 0) {
-      return res.status(400).json({ errors });
-    }
-
-    const plan = await service.createPlan(origin, destination, options);
+    const plan = await service.createPlan(origin, destination, options as any);
     return res.json({ plan });
   } catch (err: any) {
     console.error('Error creating plan', err);
