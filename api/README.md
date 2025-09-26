@@ -35,3 +35,9 @@ Next steps:
 - Add TypeORM entities for routes, POIs, users
 - Integrate routing adapter (GraphHopper/OSRM)
 - Add migrations and tests
+
+## Coverage
+
+Unit tests collect coverage via Jest. Running `npm test` in the `api/` folder will generate a `coverage/` directory with the report.
+
+CI uploads coverage reports to Codecov (when `CODECOV_TOKEN` is configured in repository secrets) and also stores the coverage artifact on workflow runs.

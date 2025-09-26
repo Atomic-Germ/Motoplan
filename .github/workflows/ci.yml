@@ -57,5 +57,18 @@ jobs:
           PG_DATABASE: planner_db
         run: npm test --prefix api -- --runInBand --colors
 
-      - name: Build (api)
-        run: npm run build --prefix api
+      - name: Upload coverage artifact (api)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-coverage-report
+          path: api/coverage
+
+      - name: Upload coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@v4
+        with:
+          files: api/coverage/**/lcov.info
+          flags: api
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
