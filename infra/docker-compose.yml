@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  api:
+    build:
+      context: ./api
+    ports:
+      - '4000:4000'
+    environment:
+      - PG_HOST=postgres
+      - PG_PORT=5432
+      - PG_USER=planner
+      - PG_PASSWORD=planner_password
+      - PG_DATABASE=planner_db
+    depends_on:
+      - postgres
+  postgres:
+    image: postgis/postgis:15-3.3
+    environment:
+      POSTGRES_USER: planner
+      POSTGRES_PASSWORD: planner_password
+      POSTGRES_DB: planner_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+volumes:
+  pgdata:
+    name: motorcycle_planner_pgdata
